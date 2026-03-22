@@ -722,15 +722,44 @@
     footer { background: #111110; color: rgba(250,248,243,.45); padding: 4rem 5% 2.5rem; }
     .footer-inner {
       max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      display: flex; justify-content: space-between; align-items: flex-start;
       gap: 3rem; padding-bottom: 3rem;
       border-bottom: 1px solid rgba(255,255,255,.07);
     }
+    .footer-brand { max-width: 340px; }
     .footer-brand .footer-logo {
       font-family: var(--font-d); font-size: 1.4rem;
       color: var(--cream); text-decoration: none; display: block; margin-bottom: .75rem;
     }
-    .footer-brand p { font-size: .85rem; line-height: 1.7; max-width: 220px; }
+    .footer-brand > p { font-size: .85rem; line-height: 1.7; margin-bottom: 1.75rem; }
+    .footer-contact {
+      display: flex; align-items: center; gap: .9rem;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px; padding: .85rem 1rem;
+    }
+    .footer-contact-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #EAF2EC, #C8DFD0);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 1.2rem; color: var(--green);
+      flex-shrink: 0; position: relative;
+    }
+    .footer-contact-avatar::after {
+      content: ''; position: absolute; bottom: 0; right: 0;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #22C55E; border: 2px solid #111110;
+    }
+    .footer-contact-name {
+      font-size: .88rem; font-weight: 600; color: rgba(250,248,243,.85);
+      margin-bottom: .15rem;
+    }
+    .footer-contact-role { font-size: .72rem; color: rgba(250,248,243,.35); margin-bottom: .35rem; }
+    .footer-email {
+      display: inline-block; font-size: .8rem; color: #7FC499;
+      text-decoration: none; font-weight: 500; transition: opacity .2s;
+    }
+    .footer-email:hover { opacity: .75; }
     .footer-col h4 {
       font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
       color: rgba(250,248,243,.5); margin-bottom: 1rem;
@@ -752,7 +781,6 @@
       .problem-grid { grid-template-columns: 1fr; }
       .how-grid { grid-template-columns: 1fr; gap: 3rem; }
       .sol-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .footer-inner { grid-template-columns: 1fr 1fr; }
       thead th:nth-child(4), tbody td:nth-child(4) { display:none; }
     }
     @media(max-width:600px) {
@@ -775,7 +803,7 @@
       .price-big { font-size: 2.4rem; }
       .pricing-card { padding: 1.5rem; }
       .feat-cols { gap: .75rem; }
-      .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .footer-inner { flex-direction: column; gap: 2.5rem; }
       .footer-bottom { flex-direction: column; text-align: center; }
       .int-strip { gap: .75rem; }
       .how-step { gap: 1rem; }
@@ -1233,6 +1261,14 @@
     <div class="footer-brand">
       <a class="footer-logo" href="#">Growmate</a>
       <p>Your AI growth employee. Validates markets, finds channels, and scales what works — starting day one.</p>
+      <div class="footer-contact">
+        <div class="footer-contact-avatar">G</div>
+        <div>
+          <div class="footer-contact-name">Grova</div>
+          <div class="footer-contact-role">AI Growth Employee · Growmate</div>
+          <a class="footer-email" href="mailto:Grova@tinkererland.ai">Grova@tinkererland.ai →</a>
+        </div>
+      </div>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
@@ -1240,18 +1276,6 @@
       <a href="#solution">Meet Grova</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-      <a href="#">Blog</a>
-    </div>
-    <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Data Security</a>
     </div>
   </div>
   <div class="footer-bottom">
