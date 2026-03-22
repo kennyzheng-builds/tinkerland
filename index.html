@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Growmate — Your AI Growth Employee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:      #FAF8F3;
+      --cream-2:    #F0EBE1;
+      --dark:       #1A1916;
+      --dark-2:     #2E2C29;
+      --green:      #2B6840;
+      --green-mid:  #4A8C62;
+      --green-pale: #EAF2EC;
+      --green-sat:  #2D7D4B;
+      --amber:      #C96A2A;
+      --amber-pale: #FAF0E6;
+      --muted:      #6B6558;
+      --muted-2:    #9A9388;
+      --border:     #E4DDD2;
+      --white:      #FFFFFF;
+      --font-d: 'Instrument Serif', Georgia, serif;
+      --font-b: 'DM Sans', system-ui, sans-serif;
+      --r: 14px;
+      --r-lg: 22px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      transition: background .3s, border-color .3s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(250,248,243,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-color: var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-d);
+      font-size: 1.55rem;
+      color: var(--dark);
+      text-decoration: none;
+      letter-spacing: -.02em;
+      z-index: 201;
+      position: relative;
+    }
+    .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--dark); }
+    .btn-nav {
+      background: var(--dark);
+      color: var(--cream) !important;
+      border: none;
+      padding: .55rem 1.25rem;
+      border-radius: 8px;
+      font-family: var(--font-b);
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s, transform .15s;
+      display: inline-block;
+      min-height: 36px;
+      line-height: 1.4;
+    }
+    .btn-nav:hover { opacity: .8; transform: translateY(-1px); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 8px;
+      z-index: 201;
+      position: relative;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile nav overlay */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0; bottom: 0;
+      background: var(--cream);
+      z-index: 199;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+    }
+    .mobile-nav.open { transform: translateX(0); }
+    .mobile-nav a {
+      font-family: var(--font-d);
+      font-size: 2rem;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .btn-nav-mobile {
+      margin-top: .5rem;
+      background: var(--dark);
+      color: var(--cream) !important;
+      padding: .9rem 2.5rem;
+      border-radius: 10px;
+      font-family: var(--font-b);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 120px 5% 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .leaf {
+      position: absolute;
+      pointer-events: none;
+      opacity: .28;
+    }
+    .leaf svg { fill: var(--green); }
+    .l1 { top: 12%; left: 6%; animation: drift 14s ease-in-out infinite; }
+    .l2 { top: 20%; right: 8%; animation: drift 18s ease-in-out infinite reverse; }
+    .l3 { bottom: 22%; left: 9%; animation: drift 16s ease-in-out infinite 2s; }
+    .l4 { bottom: 15%; right: 7%; animation: drift 12s ease-in-out infinite 1s; }
+    .l5 { top: 50%; left: 2%; animation: drift 20s ease-in-out infinite 3s; }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33%  { transform: translateY(-14px) rotate(5deg); }
+      66%  { transform: translateY(7px) rotate(-4deg); }
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: var(--green-pale);
+      border: 1px solid rgba(43,104,64,.2);
+      color: var(--green);
+      font-size: .73rem; font-weight: 700;
+      letter-spacing: .09em; text-transform: uppercase;
+      padding: .3rem .85rem; border-radius: 100px;
+      margin-bottom: 1.75rem;
+    }
+    .hero-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.5s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    h1 {
+      font-family: var(--font-d);
+      font-size: clamp(3.5rem, 7.5vw, 6.2rem);
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: -.035em;
+      color: var(--dark);
+      max-width: 820px;
+      margin: 0 auto 1.5rem;
+    }
+    h1 em { font-style: italic; color: var(--green-sat); }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+    .hero-sub strong { color: var(--dark); font-weight: 600; }
+
+    .hero-ctas {
+      display: flex; gap: .85rem; justify-content: center;
+      align-items: center; flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-primary {
+      background: var(--dark);
+      color: var(--cream);
+      border: none;
+      padding: .9rem 2rem;
+      border-radius: 10px;
+      font-family: var(--font-b);
+      font-size: .95rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      display: inline-block;
+      min-height: 48px;
+      line-height: 1.4;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(26,25,22,.22);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--muted);
+      border: 1.5px solid var(--border);
+      padding: .9rem 1.75rem;
+      border-radius: 10px;
+      font-family: var(--font-b);
+      font-size: .95rem; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s, color .2s;
+      display: inline-block;
+      min-height: 48px;
+      line-height: 1.4;
+    }
+    .btn-outline:hover { border-color: var(--dark); color: var(--dark); }
+
+    .hero-trust {
+      font-size: .78rem;
+      color: var(--muted-2);
+      margin-top: .25rem;
+    }
+
+    /* Grova hero card */
+    .grova-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.75rem;
+      max-width: 360px;
+      margin: 3rem auto 0;
+      box-shadow: 0 6px 48px rgba(26,25,22,.09), 0 1px 3px rgba(26,25,22,.05);
+      text-align: left;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+    .gc-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+    .gc-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, #EAF2EC, #C8DFD0);
+      border: 2px solid rgba(43,104,64,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 1.6rem; color: var(--green);
+      flex-shrink: 0; position: relative;
+    }
+    .gc-status-dot {
+      position: absolute; bottom: 1px; right: 1px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: #22C55E; border: 2px solid var(--white);
+    }
+    .gc-name { font-family: var(--font-d); font-size: 1.15rem; color: var(--dark); letter-spacing: -.01em; }
+    .gc-title { font-size: .78rem; color: var(--muted); font-weight: 500; margin-top: .1rem; }
+    .gc-working {
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 10px; padding: .85rem 1rem; margin-bottom: 1.25rem;
+    }
+    .gc-wlabel {
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted-2); margin-bottom: .4rem;
+    }
+    .gc-wtask { font-size: .88rem; color: var(--dark); font-weight: 500; line-height: 1.4; }
+    .gc-wtask span { color: var(--green-sat); }
+    .gc-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem; }
+    .gc-metric {
+      background: var(--cream); border-radius: 8px;
+      padding: .55rem .6rem; text-align: center;
+    }
+    .gc-metric .val {
+      font-family: var(--font-d); font-size: 1.1rem;
+      color: var(--dark); line-height: 1.1; display: block;
+    }
+    .gc-metric .lbl {
+      font-size: .65rem; color: var(--muted-2); font-weight: 500;
+      text-transform: uppercase; letter-spacing: .04em;
+      display: block; margin-top: .15rem;
+    }
+
+    /* PROOF BAR */
+    #proof {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+      overflow: hidden;
+    }
+    .proof-inner { display: flex; align-items: center; }
+    .proof-label {
+      font-size: .75rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted-2); white-space: nowrap;
+      padding: 0 2rem; flex-shrink: 0;
+    }
+    .proof-track { overflow: hidden; flex: 1; }
+    .proof-items {
+      display: flex; gap: 5rem; align-items: center;
+      animation: marquee 40s linear infinite;
+      width: max-content;
+    }
+    .proof-items:hover { animation-play-state: paused; }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .proof-item {
+      font-size: .82rem; font-weight: 700;
+      color: var(--dark); letter-spacing: .02em;
+      white-space: nowrap; display: flex; align-items: center; gap: .6rem;
+    }
+    .proof-item::after { content: '·'; color: var(--muted-2); font-size: 1rem; }
+
+    /* SECTION COMMON */
+    section { padding: 96px 5%; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: var(--font-d);
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -.025em;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+    h2 em { font-style: italic; color: var(--green-sat); }
+    .section-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 520px; line-height: 1.7;
+    }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* PROBLEM */
+    #problem { background: var(--cream-2); }
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem; margin-top: 3.5rem;
+    }
+    .prob-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .prob-card:hover { box-shadow: 0 8px 32px rgba(26,25,22,.07); transform: translateY(-3px); }
+    .prob-num {
+      font-family: var(--font-d); font-size: 2.8rem;
+      color: var(--border); line-height: 1; margin-bottom: 1rem;
+    }
+    .prob-card h3 {
+      font-family: var(--font-d); font-size: 1.3rem;
+      font-weight: 400; margin-bottom: .6rem; letter-spacing: -.01em;
+    }
+    .prob-card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
+
+    /* HOW IT WORKS */
+    #how-it-works { background: var(--cream); }
+    .how-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 3.5rem; align-items: start;
+    }
+    .how-steps { display: flex; flex-direction: column; }
+    .how-step {
+      display: flex; gap: 1.5rem;
+      padding-bottom: 2.5rem; position: relative;
+    }
+    .how-step:not(:last-child)::after {
+      content: ''; position: absolute;
+      left: 19px; top: 42px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .step-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--white); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: .85rem; color: var(--green);
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .step-body h3 {
+      font-family: var(--font-d); font-size: 1.2rem;
+      font-weight: 400; letter-spacing: -.01em; margin-bottom: .4rem;
+    }
+    .step-body p { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+
+    /* Slack mockup */
+    .slack-mockup {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+      box-shadow: 0 8px 48px rgba(26,25,22,.08);
+    }
+    .slack-header {
+      background: #3F0E40; padding: .75rem 1.25rem;
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.75);
+    }
+    .slack-channel { color: rgba(255,255,255,.92); }
+    .slack-body { padding: 1.5rem; }
+    .slack-msg { display: flex; gap: .85rem; }
+    .slack-avatar-sm {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: linear-gradient(135deg, #EAF2EC, #C8DFD0);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 1rem; color: var(--green); flex-shrink: 0;
+    }
+    .slack-name-row {
+      display: flex; align-items: baseline; gap: .5rem;
+      margin-bottom: .3rem; flex-wrap: wrap;
+    }
+    .slack-sender { font-size: .9rem; font-weight: 700; color: var(--dark); }
+    .slack-badge-sm {
+      font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: var(--green-pale); color: var(--green);
+      padding: .1rem .45rem; border-radius: 4px;
+    }
+    .slack-time-sm { font-size: .72rem; color: var(--muted-2); }
+    .slack-text { font-size: .85rem; color: var(--dark); line-height: 1.65; }
+    .slack-text strong { font-weight: 600; }
+    .slack-metric-row { display: flex; gap: .5rem; margin-top: .85rem; flex-wrap: wrap; }
+    .slack-chip {
+      background: var(--green-pale); border: 1px solid rgba(43,104,64,.15);
+      color: var(--green); font-size: .75rem; font-weight: 600;
+      padding: .25rem .7rem; border-radius: 20px;
+    }
+
+    /* Integrations */
+    .int-strip {
+      margin-top: 3rem; display: flex;
+      align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .int-label {
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted-2); white-space: nowrap;
+    }
+    .int-badges { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .int-badge {
+      font-size: .78rem; font-weight: 600; color: var(--muted);
+      background: var(--white); border: 1px solid var(--border);
+      padding: .3rem .8rem; border-radius: 20px;
+    }
+
+    /* SOLUTION */
+    #solution { background: var(--cream-2); }
+    .sol-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 3.5rem; align-items: start;
+    }
+    .profile-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 2rem;
+      box-shadow: 0 4px 32px rgba(26,25,22,.06);
+    }
+    .pc-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .pc-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #EAF2EC, #C8DFD0);
+      border: 2px solid rgba(43,104,64,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 1.7rem; color: var(--green);
+      flex-shrink: 0; position: relative;
+    }
+    .pc-online {
+      position:absolute; bottom:1px; right:1px;
+      width:12px; height:12px; border-radius:50%;
+      background:#22C55E; border:2px solid #fff;
+    }
+    .pc-name { font-family: var(--font-d); font-size: 1.2rem; letter-spacing: -.01em; }
+    .pc-role { font-size: .78rem; color: var(--muted); font-weight: 500; margin-top: .1rem; }
+    .pc-desc { font-size: .9rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .pc-traits { display: flex; flex-direction: column; gap: .5rem; }
+    .pc-trait {
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .85rem; color: var(--dark); font-weight: 500;
+    }
+    .trait-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; flex-shrink: 0;
+    }
+
+    /* Output card */
+    .output-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+      box-shadow: 0 4px 32px rgba(26,25,22,.06);
+    }
+    .oc-header {
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .oc-title { font-family: var(--font-d); font-size: 1rem; letter-spacing: -.01em; }
+    .oc-from {
+      font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+      background: var(--green-pale); color: var(--green);
+      padding: .2rem .6rem; border-radius: 4px;
+    }
+    .oc-body { padding: 0 1.5rem; }
+    .oc-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .85rem 0; border-bottom: 1px solid rgba(228,221,210,.5);
+      font-size: .85rem;
+    }
+    .oc-row:last-child { border-bottom: none; }
+    .oc-metric { color: var(--muted); }
+    .oc-val { font-weight: 600; color: var(--dark); }
+    .oc-val.pos { color: var(--green-sat); }
+
+    .sol-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+    .sol-step { display: flex; align-items: flex-start; gap: 1.25rem; }
+    .sol-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--dark); color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: .9rem; flex-shrink: 0;
+    }
+    .sol-step h3 {
+      font-family: var(--font-d); font-size: 1.25rem;
+      font-weight: 400; letter-spacing: -.01em; margin-bottom: .3rem;
+    }
+    .sol-step p { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+
+    /* COMPARE */
+    #compare { background: var(--cream); }
+    .compare-wrap {
+      margin-top: 3rem; border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    thead th {
+      padding: 1rem 1.5rem; text-align: left;
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted-2); background: var(--cream-2);
+      border-bottom: 1px solid var(--border);
+    }
+    thead th.hl { background: var(--green-pale); color: var(--green); border-top: 3px solid var(--green-sat); }
+    tbody td {
+      padding: 1rem 1.5rem; font-size: .88rem; color: var(--dark);
+      border-bottom: 1px solid rgba(228,221,210,.5);
+    }
+    tbody td.hl { background: rgba(234,242,236,.35); font-weight: 600; }
+    tbody tr:last-child td { border-bottom: none; }
+    .check { color: var(--green-sat); font-size: 1rem; font-weight: 700; }
+    .cross { color: var(--muted-2); font-size: .9rem; }
+
+    /* PRICING */
+    #pricing { background: var(--cream-2); padding: 80px 5%; }
+    #pricing .section-tag { color: var(--green); }
+    #pricing h2 { color: var(--dark); }
+    #pricing .section-sub { color: var(--muted); }
+
+    .pricing-card {
+      margin: 2.5rem auto 0;
+      max-width: 540px;
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--r-lg);
+      padding: 2rem 2.25rem;
+    }
+    .pc-badges { display: flex; gap: .45rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .pc-badge {
+      font-size: .67rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      padding: .25rem .7rem; border-radius: 100px;
+    }
+    .badge-green { background: rgba(43,104,64,.3); color: #7FC499; border: 1px solid rgba(43,104,64,.4); }
+    .badge-amber { background: rgba(201,106,42,.25); color: #E09B6A; border: 1px solid rgba(201,106,42,.4); }
+
+    .price-row {
+      display: flex; align-items: baseline; gap: .75rem;
+      margin-bottom: .4rem; flex-wrap: wrap;
+    }
+    .price-big {
+      font-family: var(--font-d); font-size: 3.2rem;
+      color: var(--cream); letter-spacing: -.04em; line-height: 1;
+    }
+    .price-unit { font-size: 1rem; color: rgba(250,248,243,.45); align-self: flex-end; padding-bottom: .4rem; }
+    .price-original { font-size: .88rem; color: rgba(250,248,243,.32); text-decoration: line-through; align-self: flex-end; padding-bottom: .45rem; }
+    .price-scarcity {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: rgba(201,106,42,.15); border: 1px solid rgba(201,106,42,.25);
+      color: #E09B6A; font-size: .75rem; font-weight: 600;
+      padding: .3rem .8rem; border-radius: 6px;
+      margin: .4rem 0 1.2rem; width: fit-content;
+    }
+    .price-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 1.2rem 0; }
+
+    .feat-cols { display: flex; gap: 1rem; margin-bottom: 1.3rem; }
+    .feat-col { list-style: none; flex: 1; display: flex; flex-direction: column; gap: .42rem; }
+    .feat-col li {
+      display: flex; align-items: flex-start; gap: .45rem;
+      font-size: .83rem; color: rgba(250,248,243,.7); line-height: 1.38;
+    }
+    .feat-col li::before { content: '✓'; color: #7FC499; font-weight: 700; font-size: .78rem; flex-shrink: 0; line-height: 1.38; }
+
+    .btn-price {
+      display: block; width: 100%; text-align: center;
+      background: var(--cream); color: var(--dark);
+      padding: .9rem 2rem; border-radius: 10px;
+      font-family: var(--font-b); font-size: .95rem; font-weight: 700;
+      text-decoration: none; transition: opacity .2s, transform .15s;
+      border: none; cursor: pointer; min-height: 48px;
+    }
+    .btn-price:hover { opacity: .92; transform: translateY(-2px); }
+    .price-fine { text-align: center; font-size: .72rem; color: rgba(250,248,243,.3); margin-top: .85rem; }
+
+    /* FAQ */
+    #faq { background: var(--cream-2); }
+    .faq-list {
+      margin-top: 3rem; max-width: 800px;
+      background: var(--border); border-radius: var(--r-lg);
+      overflow: hidden; display: flex; flex-direction: column; gap: 1px;
+    }
+    .faq-item { background: var(--white); }
+    .faq-q {
+      width: 100%; text-align: left;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.35rem 1.75rem; gap: 1rem;
+      font-family: var(--font-b); font-size: .95rem; font-weight: 600;
+      color: var(--dark); background: none; border: none; cursor: pointer;
+      min-height: 56px; transition: background .2s;
+    }
+    .faq-q:hover { background: var(--cream); }
+    .faq-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--muted); flex-shrink: 0;
+      transition: transform .3s, background .3s, border-color .3s, color .3s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--green-sat); border-color: var(--green-sat); color: var(--white); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-item.open .faq-a { max-height: 500px; }
+    .faq-a p { padding: 0 1.75rem 1.35rem; font-size: .9rem; color: var(--muted); line-height: 1.7; }
+
+    /* CTA */
+    #cta { background: var(--dark); color: var(--cream); text-align: center; }
+    #cta h2 { color: var(--cream); margin-bottom: 1rem; }
+    #cta .section-sub { color: rgba(250,248,243,.55); margin: 0 auto 2.5rem; }
+    .cta-form-wrap {
+      max-width: 520px; margin: 0 auto;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--r-lg); padding: 2.25rem;
+    }
+    .form-row { display: flex; gap: .75rem; margin-bottom: 1rem; }
+    .f-input {
+      flex: 1; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 10px;
+      padding: .9rem 1.1rem; font-family: var(--font-b); font-size: .9rem;
+      color: var(--cream); outline: none; transition: border-color .2s; min-height: 48px;
+    }
+    .f-input::placeholder { color: rgba(250,248,243,.3); }
+    .f-input:focus { border-color: rgba(43,104,64,.6); }
+    .btn-submit {
+      background: var(--green-sat); color: var(--white); border: none;
+      padding: .9rem 1.5rem; border-radius: 10px;
+      font-family: var(--font-b); font-size: .92rem; font-weight: 700;
+      cursor: pointer; transition: opacity .2s, transform .15s;
+      white-space: nowrap; min-height: 48px;
+    }
+    .btn-submit:hover { opacity: .88; transform: translateY(-1px); }
+    .f-textarea {
+      width: 100%; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 10px;
+      padding: .85rem 1.1rem; font-family: var(--font-b); font-size: .88rem;
+      color: var(--cream); outline: none; resize: none; transition: border-color .2s; display: block;
+    }
+    .f-textarea::placeholder { color: rgba(250,248,243,.25); }
+    .f-textarea:focus { border-color: rgba(43,104,64,.6); }
+    .f-label {
+      display: block; font-size: .75rem; font-weight: 600;
+      color: rgba(250,248,243,.4); letter-spacing: .06em; text-transform: uppercase; margin-bottom: .5rem;
+    }
+    .cta-trust { font-size: .75rem; color: rgba(250,248,243,.3); margin-top: 1.25rem; }
+    .cta-success { display: none; text-align: center; padding: 2rem 0; }
+    .cta-success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .cta-success h3 { font-family: var(--font-d); font-size: 1.6rem; color: var(--cream); margin-bottom: .5rem; }
+    .cta-success p { font-size: .9rem; color: rgba(250,248,243,.5); }
+
+    /* FOOTER */
+    footer { background: #111110; color: rgba(250,248,243,.45); padding: 4rem 5% 2.5rem; }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 3rem; padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .footer-brand .footer-logo {
+      font-family: var(--font-d); font-size: 1.4rem;
+      color: var(--cream); text-decoration: none; display: block; margin-bottom: .75rem;
+    }
+    .footer-brand p { font-size: .85rem; line-height: 1.7; max-width: 220px; }
+    .footer-col h4 {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(250,248,243,.5); margin-bottom: 1rem;
+    }
+    .footer-col a {
+      display: block; font-size: .85rem; color: rgba(250,248,243,.45);
+      text-decoration: none; margin-bottom: .6rem; transition: color .2s;
+    }
+    .footer-col a:hover { color: rgba(250,248,243,.85); }
+    .footer-bottom {
+      max-width: 1100px; margin: 2rem auto 0;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom span { font-size: .78rem; }
+
+    /* RESPONSIVE */
+    @media(max-width:900px) {
+      .problem-grid { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .sol-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      thead th:nth-child(4), tbody td:nth-child(4) { display:none; }
+    }
+    @media(max-width:600px) {
+      nav { padding: 0 4%; }
+      .nav-links a:not(.btn-nav) { display:none; }
+      .hamburger { display: flex; }
+      .mobile-nav { display: flex; }
+      section { padding: 72px 4%; }
+      h1 { font-size: clamp(2.8rem, 10vw, 3.8rem); }
+      h2 { font-size: clamp(2rem, 7vw, 2.6rem); }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-outline { width: 100%; text-align: center; }
+      .grova-card { margin-top: 2.5rem; }
+      .gc-metric .val { font-size: .95rem; }
+      .gc-metric .lbl { font-size: .62rem; }
+      .proof-label { display: none; }
+      .form-row { flex-direction: column; }
+      .f-input, .btn-submit { width: 100%; }
+      .btn-submit { min-height: 52px; }
+      .price-big { font-size: 2.4rem; }
+      .pricing-card { padding: 1.5rem; }
+      .feat-cols { gap: .75rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .int-strip { gap: .75rem; }
+      .how-step { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="nav-logo" href="#">Growmate</a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a class="btn-nav" href="#cta">Get Early Access</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#how-it-works" class="mobile-nav-link">How it works</a>
+  <a href="#pricing" class="mobile-nav-link">Pricing</a>
+  <a href="#faq" class="mobile-nav-link">FAQ</a>
+  <a href="#cta" class="btn-nav-mobile">Get Early Access</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="leaf l1"><svg width="80" height="120" viewBox="0 0 80 120"><path d="M40 0 C20 30 0 60 20 90 C30 110 50 120 40 120 C40 120 60 110 60 90 C80 60 60 30 40 0Z"/></svg></div>
+  <div class="leaf l2"><svg width="55" height="90" viewBox="0 0 55 90"><path d="M27 0 C12 22 0 44 14 67 C21 82 36 90 27 90 C27 90 42 82 41 67 C55 44 42 22 27 0Z"/></svg></div>
+  <div class="leaf l3"><svg width="70" height="105" viewBox="0 0 70 105"><path d="M35 0 C17 26 0 52 17 78 C26 96 44 105 35 105 C35 105 53 96 52 78 C70 52 52 26 35 0Z"/></svg></div>
+  <div class="leaf l4"><svg width="45" height="70" viewBox="0 0 45 70"><path d="M22 0 C10 17 0 35 11 52 C17 63 29 70 22 70 C22 70 34 63 33 52 C45 35 33 17 22 0Z"/></svg></div>
+  <div class="leaf l5"><svg width="60" height="95" viewBox="0 0 60 95"><path d="M30 0 C14 23 0 47 15 70 C22 85 38 95 30 95 C30 95 46 85 45 70 C60 47 45 23 30 0Z"/></svg></div>
+
+  <div class="hero-tag"><span class="hero-dot"></span> AI Growth Employee · Early Access</div>
+  <h1>Your AI <em>Growth</em> Employee</h1>
+  <p class="hero-sub">
+    Not another tool to configure. Grova joins your team like a real employee — works inside your existing communication tools, connects to your ad accounts, and drives growth 24/7 from day one.
+  </p>
+  <div class="hero-ctas">
+    <a href="#cta" class="btn-primary">Get Early Access →</a>
+    <a href="#how-it-works" class="btn-outline">See how it works ↓</a>
+  </div>
+  <p class="hero-trust">Limited to first 100 customers · Serving teams at TikTok, CapCut, Pippit</p>
+
+  <div class="grova-card reveal">
+    <div class="gc-top">
+      <div class="gc-avatar">G<div class="gc-status-dot"></div></div>
+      <div>
+        <div class="gc-name">Grova</div>
+        <div class="gc-title">Growth Employee · Growmate</div>
+      </div>
+    </div>
+    <div class="gc-working">
+      <div class="gc-wlabel">Currently working on</div>
+      <div class="gc-wtask">Analyzing TikTok creative performance — <span>UGC format outperforming by 3.4×</span></div>
+    </div>
+    <div class="gc-metrics">
+      <div class="gc-metric"><span class="val">24/7</span><span class="lbl">Available</span></div>
+      <div class="gc-metric"><span class="val">Day 1</span><span class="lbl">Starts</span></div>
+      <div class="gc-metric"><span class="val">∞</span><span class="lbl">Memory</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF BAR -->
+<div id="proof">
+  <div class="proof-inner">
+    <div class="proof-label">Serving teams at</div>
+    <div class="proof-track">
+      <div class="proof-items">
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+        <span class="proof-item">TikTok</span>
+        <span class="proof-item">CapCut</span>
+        <span class="proof-item">Pippit</span>
+        <span class="proof-item">Typeless</span>
+        <span class="proof-item">Elys</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">The problem</div>
+      <h2>You built the product.<br><em>Now what?</em></h2>
+    </div>
+    <div class="problem-grid">
+      <div class="prob-card reveal">
+        <div class="prob-num">01</div>
+        <h3>Who actually buys?</h3>
+        <p>You have a product — but not which audience truly converts, pays, and stays. Testing is slow, expensive, and rarely conclusive.</p>
+      </div>
+      <div class="prob-card reveal">
+        <div class="prob-num">02</div>
+        <h3>Where do you find them?</h3>
+        <p>Too many channels. Too little data. Too much guessing. Most teams burn budget on the wrong channels for months before finding signal.</p>
+      </div>
+      <div class="prob-card reveal">
+        <div class="prob-num">03</div>
+        <h3>How do you scale?</h3>
+        <p>Something works at small scale. Add budget and costs spiral, performance drops. Scaling isn't intuitive — it requires full-time expertise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">How it works</div>
+      <h2>From hired to working<br>in <em>hours</em></h2>
+      <p class="section-sub">Not a dashboard to manage. An employee who works inside your tools, on your channels, with your data.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-steps reveal">
+        <div class="how-step">
+          <div class="step-circle">01</div>
+          <div class="step-body">
+            <h3>Grova joins your team</h3>
+            <p>Invite her to Slack or email. She introduces herself, asks about your product, market, and goals — and gets up to speed like any new hire would.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="step-circle">02</div>
+          <div class="step-body">
+            <h3>Connect your accounts</h3>
+            <p>Link Meta Ads, TikTok Ads, Google Ads, and Shopify. Grova reads your existing data, identifies gaps, and builds her first growth strategy.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="step-circle">03</div>
+          <div class="step-body">
+            <h3>She gets to work</h3>
+            <p>Grova develops creative briefs, builds campaign plans, coordinates production, and launches experiments across your channels — autonomously.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="step-circle">04</div>
+          <div class="step-body">
+            <h3>Weekly reports, endless iteration</h3>
+            <p>Every week she messages you with insights and next steps. She never forgets a test result, never repeats a mistake, always optimizes toward your goals.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slack-mockup reveal">
+        <div class="slack-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,.65)"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.687 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.164 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.164 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.164 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.164 17.687a2.527 2.527 0 0 1-2.52-2.522 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.523 2.522h-6.313z"/></svg>
+          <span class="slack-channel">#growth-team</span>
+        </div>
+        <div class="slack-body">
+          <div class="slack-msg">
+            <div class="slack-avatar-sm">G</div>
+            <div>
+              <div class="slack-name-row">
+                <span class="slack-sender">Grova</span>
+                <span class="slack-badge-sm">Growth Employee</span>
+                <span class="slack-time-sm">Today 9:04 AM</span>
+              </div>
+              <div class="slack-text">
+                📊 <strong>Week 3 Report — TikTok is your winner</strong><br><br>
+                Here's what I found this week:<br>
+                • TikTok ROAS: <strong>3.4×</strong> (was 2.1× last week)<br>
+                • Best creative format: UGC testimonial<br>
+                • Recommendation: scale TikTok budget +40%<br>
+                • 2 new audience segments launching Monday<br><br>
+                Creative briefs are ready. Want to review before I launch?
+                <div class="slack-metric-row">
+                  <span class="slack-chip">+3.4× ROAS</span>
+                  <span class="slack-chip">+$4,800 revenue</span>
+                  <span class="slack-chip">2 tests live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="int-strip reveal">
+      <span class="int-label">Connects with</span>
+      <div class="int-badges">
+        <span class="int-badge">Meta Ads</span>
+        <span class="int-badge">TikTok Ads</span>
+        <span class="int-badge">Google Ads</span>
+        <span class="int-badge">Shopify</span>
+        <span class="int-badge">Slack</span>
+        <span class="int-badge">Email</span>
+        <span class="int-badge">+ more</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">Meet Grova</div>
+      <h2>Not a tool you manage.<br>A growth employee <em>who works for you.</em></h2>
+    </div>
+    <div class="sol-grid">
+      <div class="reveal">
+        <div class="profile-card">
+          <div class="pc-top">
+            <div class="pc-avatar">G<div class="pc-online"></div></div>
+            <div>
+              <div class="pc-name">Grova</div>
+              <div class="pc-role">AI Growth Employee · Growmate</div>
+            </div>
+          </div>
+          <p class="pc-desc">She has your full business context. Works 24/7. Never forgets a test result. Executes across every growth channel — with the judgment of a senior hire.</p>
+          <div class="pc-traits">
+            <div class="pc-trait"><div class="trait-icon">🧠</div>Remembers every insight and test result</div>
+            <div class="pc-trait"><div class="trait-icon">⚡</div>Executes campaigns without waiting for direction</div>
+            <div class="pc-trait"><div class="trait-icon">📊</div>Reports clearly, recommends confidently</div>
+            <div class="pc-trait"><div class="trait-icon">🔗</div>Lives in your Slack, email, and ad accounts</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="output-card" style="margin-bottom:1.75rem;">
+          <div class="oc-header">
+            <span class="oc-title">Weekly Growth Report</span>
+            <span class="oc-from">FROM GROVA</span>
+          </div>
+          <div class="oc-body">
+            <div class="oc-row"><span class="oc-metric">TikTok ROAS</span><span class="oc-val pos">3.4× ↑</span></div>
+            <div class="oc-row"><span class="oc-metric">Top creative format</span><span class="oc-val pos">UGC testimonial</span></div>
+            <div class="oc-row"><span class="oc-metric">Revenue attributed</span><span class="oc-val pos">+$4,800</span></div>
+            <div class="oc-row"><span class="oc-metric">Audiences tested</span><span class="oc-val">3 segments</span></div>
+            <div class="oc-row"><span class="oc-metric">Next action</span><span class="oc-val">Scale TikTok +40%</span></div>
+          </div>
+        </div>
+        <div class="sol-steps">
+          <div class="sol-step">
+            <div class="sol-num">①</div>
+            <div>
+              <h3>Validate Audiences</h3>
+              <p>Tests assumptions across segments. Finds who actually converts and pays — not who you think will.</p>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="sol-num">②</div>
+            <div>
+              <h3>Find Your Channels</h3>
+              <p>Runs experiments across Meta, TikTok, Google, and more. Follows the data, not the hype.</p>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="sol-num">③</div>
+            <div>
+              <h3>Scale What Works</h3>
+              <p>Multiplies winners systematically. Cuts underperformers. No budget wasted on what doesn't convert.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section id="compare">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">The comparison</div>
+      <h2>Why hire Grova <em>instead?</em></h2>
+    </div>
+    <div class="compare-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="hl">Growmate (Grova)</th>
+            <th>Growth Agency</th>
+            <th>In-house Team</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Monthly cost</td>
+            <td class="hl">$1,000/mo</td>
+            <td>$8,000–$15,000</td>
+            <td>$13,000+</td>
+          </tr>
+          <tr>
+            <td>Start date</td>
+            <td class="hl">Day 1</td>
+            <td>2–4 weeks</td>
+            <td>1–3 months</td>
+          </tr>
+          <tr>
+            <td>Availability</td>
+            <td class="hl">24/7</td>
+            <td>Business hours</td>
+            <td>Business hours</td>
+          </tr>
+          <tr>
+            <td>Learns your business</td>
+            <td class="hl"><span class="check">✓</span> From day one</td>
+            <td><span class="cross">Partial</span></td>
+            <td><span class="cross">Requires months</span></td>
+          </tr>
+          <tr>
+            <td>Data-driven execution</td>
+            <td class="hl"><span class="check">✓</span> Always</td>
+            <td><span class="cross">Inconsistent</span></td>
+            <td><span class="cross">Depends on hire</span></td>
+          </tr>
+          <tr>
+            <td>Works in your Slack</td>
+            <td class="hl"><span class="check">✓</span></td>
+            <td><span class="cross">Email only</span></td>
+            <td><span class="check">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner" style="text-align:center;">
+    <div class="reveal">
+      <div class="section-tag">Founder's Plan</div>
+      <h2 style="font-size:clamp(1.8rem,3vw,2.5rem);">Lock in before the price <em>goes up.</em></h2>
+      <p class="section-sub" style="margin:0 auto;font-size:.95rem;">Early Access pricing for the first 100 customers. Once spots are gone, they're gone.</p>
+    </div>
+
+    <div class="pricing-card reveal">
+      <div class="pc-badges">
+        <span class="pc-badge badge-green">Early Access</span>
+        <span class="pc-badge badge-amber">🔒 1-Year Price Lock</span>
+      </div>
+      <div class="price-row">
+        <span class="price-big">$1,000</span>
+        <span class="price-unit">/ month</span>
+        <span class="price-original">$3,999/mo</span>
+      </div>
+      <div class="price-scarcity">⚡ Fewer than 23 spots remaining</div>
+
+      <hr class="price-divider" />
+
+      <div class="feat-cols">
+        <ul class="feat-col">
+          <li>Audience &amp; ICP validation</li>
+          <li>Creative strategy &amp; briefs</li>
+          <li>Full campaign execution</li>
+          <li>Weekly growth reports</li>
+        </ul>
+        <ul class="feat-col">
+          <li>24/7 autonomous operation</li>
+          <li>4-hour onboarding session</li>
+          <li>Direct founder access</li>
+          <li>Roadmap input</li>
+        </ul>
+      </div>
+
+      <a href="#cta" class="btn-price">Lock in $1,000/mo →</a>
+      <p class="price-fine">Cancel anytime · No contracts · 30-day money-back guarantee</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">FAQ</div>
+      <h2>Common <em>questions</em></h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q">Will this replace my team? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>No. Grova handles execution and analysis so your team can focus on strategy and decisions. Think of her as a new hire who takes the execution load off — not a replacement for the people who own vision and relationships.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is $1,000/mo the real price? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>No — it's the Early Access rate for the first 100 customers only. Regular price is $3,999/mo. Lock in now and your price stays at $1,000/mo for your entire first year, guaranteed.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How fast will I see results? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Grova delivers her first growth analysis within 7 days of onboarding. First channel experiments launch within 2 weeks. Most customers see meaningful signal within 30 days.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need technical knowledge? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>None at all. You share your product context and goals during onboarding. Grova handles everything from connecting your ad accounts to building and executing campaigns. You'll interact with her exactly like you would a real team member — in Slack or email.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is my data safe? <span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Yes. Grova connects to your accounts via secure OAuth — we never store credentials. Your ad data, business information, and customer data stay in your accounts. We follow strict data access policies and will never use your data to train models or share it with third parties.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="section-inner">
+    <div class="reveal">
+      <h2>Grova is ready to start.</h2>
+      <p class="section-sub">Join the first 100 founders building with an AI growth employee. We'll be in touch within 24 hours.</p>
+    </div>
+    <div class="cta-form-wrap reveal">
+      <div id="cta-form">
+        <div class="form-row">
+          <input class="f-input" type="email" id="email-input" placeholder="your@company.com" required />
+          <button class="btn-submit" onclick="submitForm(event)">Get Access →</button>
+        </div>
+        <p class="cta-trust">No spam. We'll reach out personally within 24 hours.</p>
+      </div>
+      <div class="cta-success" id="cta-success">
+        <div class="cta-success-icon">✅</div>
+        <h3>You're on the list.</h3>
+        <p>We'll be in touch personally within 24 hours.<br>Check your inbox — Grova is ready to start.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="footer-logo" href="#">Growmate</a>
+      <p>Your AI growth employee. Validates markets, finds channels, and scales what works — starting day one.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#how-it-works">How it works</a>
+      <a href="#solution">Meet Grova</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Data Security</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Growmate. All rights reserved.</span>
+    <span>Made for growth teams worldwide.</span>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mobile-nav-link, .btn-nav-mobile').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // FAQ
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Form
+  function submitForm(e) {
+    e.preventDefault();
+    const email = document.getElementById('email-input').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('email-input').style.borderColor = 'rgba(201,106,42,.6)';
+      document.getElementById('email-input').focus();
+      return;
+    }
+    document.getElementById('cta-form').style.display = 'none';
+    document.getElementById('cta-success').style.display = 'block';
+  }
+</script>
+</body>
+</html>
